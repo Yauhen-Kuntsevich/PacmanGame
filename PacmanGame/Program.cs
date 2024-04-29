@@ -12,6 +12,7 @@ class Program
 
         int pacmanX = 1;
         int pacmanY = 1;
+        int score = 0;
 
         while (true)
         {
@@ -26,11 +27,11 @@ class Program
 
             Console.ForegroundColor = ConsoleColor.Blue;
             Console.SetCursorPosition(32, 0);
-            Console.Write(pressedKey.KeyChar);
+            Console.Write($"Score: {score}");
 
             pressedKey = Console.ReadKey();
 
-            HandleInput(pressedKey, ref pacmanX, ref pacmanY);
+            HandleInput(pressedKey, ref pacmanX, ref pacmanY, map, ref score);
         }
     }
 
@@ -79,24 +80,27 @@ class Program
         }
     }
 
-    private static void HandleInput(ConsoleKeyInfo pressedKey, ref int pacmanX, ref int pacmanY)
+    private static void HandleInput(ConsoleKeyInfo pressedKey, ref int pacmanX, ref int pacmanY, char[,] map, ref int score)
     {
-        if (pressedKey.Key == ConsoleKey.UpArrow)
+        int[] direction = GetDirection(pressedKey);
+
+        int nextPacmanPositionX = pacmanX + direction[0];
+        int nextPacmanPositionY = pacmanY + direction[1];
+
+        char nextCell = map[nextPacmanPositionX, nextPacmanPositionY];
+
+        if (nextCell == ' ' || nextCell == '.')
         {
-            pacmanY -= 1;
+            pacmanX = nextPacmanPositionX;
+            pacmanY = nextPacmanPositionY;
+
+            if (nextCell == '.')
+            {
+                score += 1;
+                map[nextPacmanPositionX, nextPacmanPositionY] = ' ';
+            }
         }
-        else if (pressedKey.Key == ConsoleKey.DownArrow)
-        {
-            pacmanY += 1;
-        }
-        else if (pressedKey.Key == ConsoleKey.RightArrow)
-        {
-            pacmanX += 1;
-        }
-        else if (pressedKey.Key == ConsoleKey.LeftArrow)
-        {
-            pacmanX -= 1;
-        }
+
     }
 
     private static int[] GetDirection(ConsoleKeyInfo pressedKey)
