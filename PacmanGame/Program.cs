@@ -5,14 +5,14 @@ class Program
     static void Main()
     {
         Console.CursorVisible = false;
-        
+
         var map = ReadMap("map.txt");
-        
+
         ConsoleKeyInfo pressedKey = new ConsoleKeyInfo('w', ConsoleKey.W, false, false, false);
 
         int pacmanX = 1;
         int pacmanY = 1;
-        
+
         while (true)
         {
             Console.Clear();
@@ -27,8 +27,10 @@ class Program
             Console.ForegroundColor = ConsoleColor.Blue;
             Console.SetCursorPosition(32, 0);
             Console.Write(pressedKey.KeyChar);
-            
+
             pressedKey = Console.ReadKey();
+
+            HandleInput(pressedKey, ref pacmanX, ref pacmanY);
         }
     }
 
@@ -47,6 +49,7 @@ class Program
 
         return map;
     }
+
 
     private static int GetMaxLineLength(string[] lines)
     {
@@ -74,5 +77,49 @@ class Program
 
             Console.Write("\n");
         }
+    }
+
+    private static void HandleInput(ConsoleKeyInfo pressedKey, ref int pacmanX, ref int pacmanY)
+    {
+        if (pressedKey.Key == ConsoleKey.UpArrow)
+        {
+            pacmanY -= 1;
+        }
+        else if (pressedKey.Key == ConsoleKey.DownArrow)
+        {
+            pacmanY += 1;
+        }
+        else if (pressedKey.Key == ConsoleKey.RightArrow)
+        {
+            pacmanX += 1;
+        }
+        else if (pressedKey.Key == ConsoleKey.LeftArrow)
+        {
+            pacmanX -= 1;
+        }
+    }
+
+    private static int[] GetDirection(ConsoleKeyInfo pressedKey)
+    {
+        int[] direction = { 0, 0 };
+
+        if (pressedKey.Key == ConsoleKey.UpArrow)
+        {
+            direction[1] = -1;
+        }
+        else if (pressedKey.Key == ConsoleKey.DownArrow)
+        {
+            direction[1] = 1;
+        }
+        else if (pressedKey.Key == ConsoleKey.RightArrow)
+        {
+            direction[0] = 1;
+        }
+        else if (pressedKey.Key == ConsoleKey.LeftArrow)
+        {
+            direction[0] = -1;
+        }
+
+        return direction;
     }
 }
